@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+
+header:
+  version: 14
+
+distro: poky
+
+defaults:
+  repos:
+    branch: master
+
+repos:
+  meta-qcom:
+
+  oe-core:
+    url: https://git.openembedded.org/openembedded-core
+    layers:
+      meta:
+
+  bitbake:
+    url: https://git.openembedded.org/bitbake
+    layers:
+      .: excluded
+
+  meta-yocto:
+    url: https://git.yoctoproject.org/git/meta-yocto
+    layers:
+      meta-poky:
+
+  meta-oe:
+    url: https://github.com/openembedded/meta-openembedded.git
+    layers:
+      meta-oe:
+
+local_conf_header:
+  base: |
+    CONF_VERSION = "2"
+    INIT_MANAGER = "systemd"
+    PACKAGE_CLASSES = "package_ipk"
+    INHERIT += "buildstats buildstats-summary"
+    INHERIT += "buildhistory"
+    INHERIT += "rm_work"
+    LICENSE_FLAGS_ACCEPTED += "commercial"
+  qcomflash: |
+    IMAGE_CLASSES += "image_types_qcom"
+    IMAGE_FSTYPES += "qcomflash"
+  extra: |
+    DISTRO_FEATURES:append = " efi"
+    EXTRA_IMAGE_FEATURES = "allow-empty-password empty-root-password allow-root-login ssh-server-openssh"
+    IMAGE_ROOTFS_EXTRA_SPACE = "307200"
+    RM_WORK_EXCLUDE += " virtual/kernel "
+    MACHINE_EXTRA_RRECOMMENDS += " kernel-modules yavta alsa-utils v4l-utils pciutils ffmpeg "
+    MACHINE_FEATURES += "usb usbhost usbgadget alsa wifi bluetooth pci"
+
+machine: unset
+
+target:
+  - core-image-base
