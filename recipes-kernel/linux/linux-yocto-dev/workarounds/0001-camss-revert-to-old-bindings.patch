@@ -1,0 +1,235 @@
+From 1caa9eab5b00e94b7fd38c7aa47e7d81a4e5005f Mon Sep 17 00:00:00 2001
+From: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
+Date: Wed, 5 Mar 2025 13:47:32 +0100
+Subject: [PATCH] camss: revert to old bindings
+
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
+Upstream-Status: Inappropriate [waiting for bindings]
+
+---
+ drivers/media/platform/qcom/camss/camss.c | 141 ++++++++++++----------
+ 1 file changed, 78 insertions(+), 63 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
+index a85e9df0f301..679c362911ce 100644
+--- a/drivers/media/platform/qcom/camss/camss.c
++++ b/drivers/media/platform/qcom/camss/camss.c
+@@ -1342,12 +1342,14 @@ static const struct camss_subdev_resources csiphy_res_7280[] = {
+ static const struct camss_subdev_resources csid_res_7280[] = {
+ 	/* CSID0 */
+ 	{
+-		.regulators = {},
++		.regulators = { "vdda-phy", "vdda-pll" },
+ 
+-		.clock = { "vfe0_csid", "vfe0_cphy_rx", "vfe0" },
+-		.clock_rate = { { 300000000, 400000000 },
+-				{ 0 },
+-				{ 380000000, 510000000, 637000000, 760000000 }
++		.clock = { "csi0", "vfe0_cphy_rx", "vfe0", "soc_ahb"},
++		.clock_rate = {
++			{ 300000000, 0, 380000000, 0},
++			{ 400000000, 0, 510000000, 0},
++			{ 400000000, 0, 637000000, 0},
++			{ 400000000, 0, 760000000, 0}
+ 		},
+ 
+ 		.reg = { "csid0" },
+@@ -1361,12 +1363,14 @@ static const struct camss_subdev_resources csid_res_7280[] = {
+ 	},
+ 	/* CSID1 */
+ 	{
+-		.regulators = {},
++		.regulators = { "vdda-phy", "vdda-pll" },
+ 
+-		.clock = { "vfe1_csid", "vfe1_cphy_rx", "vfe1" },
+-		.clock_rate = { { 300000000, 400000000 },
+-				{ 0 },
+-				{ 380000000, 510000000, 637000000, 760000000 }
++		.clock = { "csi1", "vfe1_cphy_rx", "vfe1", "soc_ahb"},
++		.clock_rate = {
++			{ 300000000, 0, 380000000, 0},
++			{ 400000000, 0, 510000000, 0},
++			{ 400000000, 0, 637000000, 0},
++			{ 400000000, 0, 760000000, 0}
+ 		},
+ 
+ 		.reg = { "csid1" },
+@@ -1380,12 +1384,14 @@ static const struct camss_subdev_resources csid_res_7280[] = {
+ 	},
+ 	/* CSID2 */
+ 	{
+-		.regulators = {},
++		.regulators = { "vdda-phy", "vdda-pll" },
+ 
+-		.clock = { "vfe2_csid", "vfe2_cphy_rx", "vfe2" },
+-		.clock_rate = { { 300000000, 400000000 },
+-				{ 0 },
+-				{ 380000000, 510000000, 637000000, 760000000 }
++		.clock = { "csi2", "vfe2_cphy_rx", "vfe2", "soc_ahb"},
++		.clock_rate = {
++			{ 300000000, 0, 380000000, 0},
++			{ 400000000, 0, 510000000, 0},
++			{ 400000000, 0, 637000000, 0},
++			{ 400000000, 0, 760000000, 0}
+ 		},
+ 
+ 		.reg = { "csid2" },
+@@ -1399,12 +1405,14 @@ static const struct camss_subdev_resources csid_res_7280[] = {
+ 	},
+ 	/* CSID3 */
+ 	{
+-		.regulators = {},
++		.regulators = { "vdda-phy", "vdda-pll" },
+ 
+-		.clock = { "vfe_lite0_csid", "vfe_lite0_cphy_rx", "vfe_lite0" },
+-		.clock_rate = { { 300000000, 400000000 },
+-				{ 0 },
+-				{ 320000000, 400000000, 480000000, 600000000 }
++		.clock = { "csi3", "vfe0_lite_cphy_rx", "vfe0_lite", "soc_ahb"},
++		.clock_rate = {
++			{ 300000000, 0, 320000000, 0},
++			{ 400000000, 0, 400000000, 0},
++			{ 400000000, 0, 480000000, 0},
++			{ 400000000, 0, 600000000, 0}
+ 		},
+ 
+ 		.reg = { "csid_lite0" },
+@@ -1418,12 +1426,14 @@ static const struct camss_subdev_resources csid_res_7280[] = {
+ 	},
+ 	/* CSID4 */
+ 	{
+-		.regulators = {},
++		.regulators = { "vdda-phy", "vdda-pll" },
+ 
+-		.clock = { "vfe_lite1_csid", "vfe_lite1_cphy_rx", "vfe_lite1" },
+-		.clock_rate = { { 300000000, 400000000 },
+-				{ 0 },
+-				{ 320000000, 400000000, 480000000, 600000000 }
++		.clock = { "csi3", "vfe0_lite_cphy_rx", "vfe0_lite", "soc_ahb"},
++		.clock_rate = {
++			{ 300000000, 0, 320000000, 0},
++			{ 400000000, 0, 400000000, 0},
++			{ 400000000, 0, 480000000, 0},
++			{ 400000000, 0, 600000000, 0}
+ 		},
+ 
+ 		.reg = { "csid_lite1" },
+@@ -1442,14 +1452,15 @@ static const struct camss_subdev_resources vfe_res_7280[] = {
+ 	{
+ 		.regulators = {},
+ 
+-		.clock = { "camnoc_axi", "cpas_ahb", "icp_ahb", "vfe0",
+-			   "vfe0_axi", "gcc_cam_hf_axi" },
+-		.clock_rate = { { 150000000, 240000000, 320000000, 400000000, 480000000 },
+-				{ 80000000 },
+-				{ 0 },
+-				{ 380000000, 510000000, 637000000, 760000000 },
+-				{ 0 },
+-				{ 0 } },
++		.clock = { "vfe0", "vfe0_axi", "soc_ahb",
++			   "camnoc_axi", "gcc_camera_axi"},
++		.clock_rate = {
++			{ 380000000, 0, 80000000, 150000000, 0},
++			{ 510000000, 0, 80000000, 240000000, 0},
++			{ 637000000, 0, 80000000, 320000000, 0},
++			{ 760000000, 0, 80000000, 400000000, 0},
++			{ 760000000, 0, 80000000, 480000000, 0},
++		},
+ 
+ 		.reg = { "vfe0" },
+ 		.interrupt = { "vfe0" },
+@@ -1467,14 +1478,15 @@ static const struct camss_subdev_resources vfe_res_7280[] = {
+ 	{
+ 		.regulators = {},
+ 
+-		.clock = { "camnoc_axi", "cpas_ahb", "icp_ahb", "vfe1",
+-			   "vfe1_axi", "gcc_cam_hf_axi" },
+-		.clock_rate = { { 150000000, 240000000, 320000000, 400000000, 480000000 },
+-				{ 80000000 },
+-				{ 0 },
+-				{ 380000000, 510000000, 637000000, 760000000 },
+-				{ 0 },
+-				{ 0 } },
++		.clock = { "vfe1", "vfe1_axi", "soc_ahb",
++			   "camnoc_axi", "gcc_camera_axi"},
++		.clock_rate = {
++			{ 380000000, 0, 80000000, 150000000, 0},
++			{ 510000000, 0, 80000000, 240000000, 0},
++			{ 637000000, 0, 80000000, 320000000, 0},
++			{ 760000000, 0, 80000000, 400000000, 0},
++			{ 760000000, 0, 80000000, 480000000, 0},
++		},
+ 
+ 		.reg = { "vfe1" },
+ 		.interrupt = { "vfe1" },
+@@ -1492,14 +1504,15 @@ static const struct camss_subdev_resources vfe_res_7280[] = {
+ 	{
+ 		.regulators = {},
+ 
+-		.clock = { "camnoc_axi", "cpas_ahb", "icp_ahb", "vfe2",
+-			   "vfe2_axi", "gcc_cam_hf_axi" },
+-		.clock_rate = { { 150000000, 240000000, 320000000, 400000000, 480000000 },
+-				{ 80000000 },
+-				{ 0 },
+-				{ 380000000, 510000000, 637000000, 760000000 },
+-				{ 0 },
+-				{ 0 } },
++		.clock = { "vfe2", "vfe2_axi", "soc_ahb",
++			   "camnoc_axi", "gcc_camera_axi"},
++		.clock_rate = {
++			{ 380000000, 0, 80000000, 150000000, 0},
++			{ 510000000, 0, 80000000, 240000000, 0},
++			{ 637000000, 0, 80000000, 320000000, 0},
++			{ 760000000, 0, 80000000, 400000000, 0},
++			{ 760000000, 0, 80000000, 480000000, 0},
++		},
+ 
+ 		.reg = { "vfe2" },
+ 		.interrupt = { "vfe2" },
+@@ -1515,13 +1528,14 @@ static const struct camss_subdev_resources vfe_res_7280[] = {
+ 	},
+ 	/* VFE3 (lite) */
+ 	{
+-		.clock = { "camnoc_axi", "cpas_ahb", "icp_ahb",
+-			   "vfe_lite0", "gcc_cam_hf_axi" },
+-		.clock_rate = { { 150000000, 240000000, 320000000, 400000000, 480000000 },
+-				{ 80000000 },
+-				{ 0 },
+-				{ 320000000, 400000000, 480000000, 600000000 },
+-				{ 0 } },
++		.clock = { "vfe0_lite", "soc_ahb",
++			   "camnoc_axi", "gcc_camera_axi"},
++		.clock_rate = {
++			{ 320000000, 80000000, 150000000, 0},
++			{ 400000000, 80000000, 240000000, 0},
++			{ 480000000, 80000000, 320000000, 0},
++			{ 600000000, 80000000, 400000000, 0},
++		},
+ 
+ 		.regulators = {},
+ 		.reg = { "vfe_lite0" },
+@@ -1536,13 +1550,14 @@ static const struct camss_subdev_resources vfe_res_7280[] = {
+ 	},
+ 	/* VFE4 (lite) */
+ 	{
+-		.clock = { "camnoc_axi", "cpas_ahb", "icp_ahb",
+-			   "vfe_lite1", "gcc_cam_hf_axi" },
+-		.clock_rate = { { 150000000, 240000000, 320000000, 400000000, 480000000 },
+-				{ 80000000 },
+-				{ 0 },
+-				{ 320000000, 400000000, 480000000, 600000000 },
+-				{ 0 } },
++		.clock = { "vfe1_lite", "soc_ahb",
++			   "camnoc_axi", "gcc_camera_axi"},
++		.clock_rate = {
++			{ 320000000, 80000000, 150000000, 0},
++			{ 400000000, 80000000, 240000000, 0},
++			{ 480000000, 80000000, 320000000, 0},
++			{ 600000000, 80000000, 400000000, 0},
++		},
+ 
+ 		.regulators = {},
+ 		.reg = { "vfe_lite1" },
+-- 
+2.34.1
+

@@ -10,6 +10,7 @@ SRC_URI:append:qcom = " \
     file://qcm6490-board-dts/0001-dt-bindings-PCI-Add-binding-for-Toshiba-TC956x-PCIe-.patch \
     file://qcm6490-board-dts/0002-arm64-dts-qcom-qcs6490-rb3gen2-Add-TC956x-PCIe-switc.patch \
     file://qcm6490-board-dts/0001-PENDING-enable-xHCI.patch \
+    file://qcm6490-board-dts/0001-arm64-dts-qcom-sc7280-Add-support-for-camss.patch \
     file://workarounds/0001-QCLINUX-arm64-dts-qcom-qcm6490-disable-sdhc1-for-ufs.patch \
     file://workarounds/0001-PENDING-arm64-dts-qcom-Remove-voltage-vote-support-f.patch \
     file://workarounds/0003-PCI-Add-new-start_link-stop_link-function-ops.patch \
@@ -18,6 +19,7 @@ SRC_URI:append:qcom = " \
     file://workarounds/0006-PCI-qcom-Add-support-for-host_stop_link-host_start_l.patch \
     file://workarounds/0007-PCI-PCI-Add-pcie_is_link_active-to-determine-if-the-.patch \
     file://workarounds/0008-PCI-pwrctrl-Add-power-control-driver-for-tc956x.patch \
+    file://workarounds/0001-camss-revert-to-old-bindings.patch \
 "
 
 # Include additional kernel configs.
